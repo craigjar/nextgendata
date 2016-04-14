@@ -1,0 +1,14 @@
+province_cd	src_province_cd
+1	AB
+2	BC
+3	MB
+4	NB
+5	NL
+6	NS
+7	ON
+8	PE
+9	QC
+10	SK
+11	NT
+12	NU
+13	YT
