@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="nextgendata">
+    <output-path>$PROJECT_DIR$/out/artifacts/nextgendata</output-path>
+    <root id="archive" name="nextgendata.jar">
+      <element id="module-output" name="nextgendata" />
+    </root>
+  </artifact>
+</component>
