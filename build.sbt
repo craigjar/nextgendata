@@ -8,6 +8,8 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.1"
 
 libraryDependencies += "org.apache.spark" %% "spark-streaming" % "1.6.1"
 
+libraryDependencies += "org.apache.spark" %% "spark-sql" % "1.6.1"
+
 resolvers ++= Seq(
   "Akka Repository" at "http://repo.akka.io/releases/",
   "Spray Repository" at "http://repo.spray.cc/")
