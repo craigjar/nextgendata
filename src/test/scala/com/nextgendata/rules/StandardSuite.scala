@@ -19,6 +19,11 @@ class StandardSuite extends SparkFunSuite with SharedSparkContext {
     assert(Standard.defaultInvalid(null, "2") == "-99")
   }
 
+  test("defaultInvalid test empty String for source value") {
+    // If source value was not provided (empty String) then default
+    assert(Standard.defaultInvalid("", null) == "-99")
+  }
+
   test("defaultInvalid test invalid value") {
     // If source value was provided (not null) but not mapped (mappedVal = null) then invalid
     assert(Standard.defaultInvalid("1", null) == "-1")
