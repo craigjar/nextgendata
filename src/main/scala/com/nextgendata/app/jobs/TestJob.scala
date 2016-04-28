@@ -1,6 +1,6 @@
 package com.nextgendata.jobs
 
-import com.nextgendata.rules.Standard
+import com.nextgendata.app.rules.Standard
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
@@ -31,7 +31,7 @@ object TestJob {
 
     val provinceCodeMap = sc.textFile("examples/spark_repl_demo/province_code_map.txt")
       .map(_.split("\t"))
-      .map(p => ProvinceCodeMap(p(0), p(1)))
+      .map(p => ProvinceCodeMap2(p(0), p(1)))
       .toDF()
     provinceCodeMap.registerTempTable("provinceCodeMap")
 
@@ -71,4 +71,4 @@ object TestJob {
 case class Person(firstName: String, lastName: String, companyName: String, address: String, city: String, province: String, postal: String, phone1: String, phone2: String, email: String, web: String)
 
 // Create a case class for a province code map table and load the data into a dataframe
-case class ProvinceCodeMap(provinceCd: String, srcProvinceCd: String)
+case class ProvinceCodeMap2(provinceCd: String, srcProvinceCd: String)
