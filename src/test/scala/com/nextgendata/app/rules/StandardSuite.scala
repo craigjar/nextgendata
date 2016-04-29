@@ -1,4 +1,4 @@
-package com.nextgendata.rules
+package com.nextgendata.app.rules
 
 import com.nextgendata.{SharedSparkContext, SparkFunSuite}
 import org.apache.spark.sql.{Row, SQLContext}
@@ -16,17 +16,17 @@ class StandardSuite extends SparkFunSuite with SharedSparkContext {
 
   test("defaultInvalid test default value") {
     // If source value is null then default
-    assert(Standard.defaultInvalid(null, "2") == "-99")
+    assert(Standard.defaultInvalid((), "2") == "-99")
   }
 
   test("defaultInvalid test empty String for source value") {
     // If source value was not provided (empty String) then default
-    assert(Standard.defaultInvalid("", null) == "-99")
+    assert(Standard.defaultInvalid("", ()) == "-99")
   }
 
   test("defaultInvalid test invalid value") {
     // If source value was provided (not null) but not mapped (mappedVal = null) then invalid
-    assert(Standard.defaultInvalid("1", null) == "-1")
+    assert(Standard.defaultInvalid("1", ()) == "-1")
   }
 
   test("defaultInvalid test works in SparkContext UDF") {
@@ -35,7 +35,7 @@ class StandardSuite extends SparkFunSuite with SharedSparkContext {
 
     val data = sc.parallelize(Array(Array("1", "2"),Array(null, "2"),Array("1",null))).map(d => DataRec(d(0), d(1))).toDF()
 
-    val defaultInvalid = udf((srcVal: String, mappedVal: String) => Standard.defaultInvalid(srcVal, mappedVal))
+    val defaultInvalid = udf((srcVal: String, mappedVal: String) => Standard.defaultInvalid(srcVal, mappedVal).asInstanceOf[String])
 
     val resData = data
       .withColumn("result", defaultInvalid($"srcVal", $"mappedVal"))
