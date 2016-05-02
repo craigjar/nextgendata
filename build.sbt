@@ -18,3 +18,6 @@ resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksam
 
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.6" % "test"
 
+libraryDependencies += "commons-io" % "commons-io" % "2.5"
+
+

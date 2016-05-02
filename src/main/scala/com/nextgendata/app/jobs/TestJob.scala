@@ -52,7 +52,7 @@ object TestJob {
     peopleWithProvinceCode.show(5)
 
     // Wrap Standard.defaultInvalid rule with UDF so that it can be used in DataFrame
-    val defaultInvalid = udf((srcVal: String, mappedVal: String) => Standard.defaultInvalid(srcVal, mappedVal))
+    val defaultInvalid = udf((srcVal: String, mappedVal: String) => Standard.defaultInvalid(srcVal, mappedVal).toString)
 
     // Execute the join add add a new column which is processed with our validate function to apply the invalid/default logic
     // Reduce results to those columns we wish to see and make it unique

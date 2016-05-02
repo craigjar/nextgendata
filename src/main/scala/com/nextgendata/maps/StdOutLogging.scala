@@ -5,6 +5,6 @@ package com.nextgendata.maps
   */
 trait StdOutLogging extends Logging{
   def log(srcVal: Any, mappedVal: Any): Unit = {
-    print("""Source value """" + srcVal.toString + """" did not map.""")
+    println("""Source value """" + srcVal.toString + """" did not map.""")
   }
 }

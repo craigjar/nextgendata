@@ -8,6 +8,8 @@ trait Logging extends Mapper {
     val mappedVal = super.lookup(srcVal)
 
     if (mappedVal == ()) log(srcVal, mappedVal)
+
+    mappedVal
   }
 
   def log (srcVal: Any, mappedVal: Any): Unit
