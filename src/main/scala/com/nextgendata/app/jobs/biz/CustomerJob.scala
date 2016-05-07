@@ -1,6 +1,6 @@
 package com.nextgendata.app.jobs.biz
 
-import com.nextgendata.app.maps.{ApplyDefaultInvaild, ProvinceCodeMap, ProvinceCodeMapVal}
+import com.nextgendata.app.maps.{ApplyDefaultInvaild, ProvinceCodeMap, ProvinceCodeMapVal,ProvinceNameMap, ProvinceNameMapVal }
 import org.apache.spark.{SparkConf, SparkContext}
 import com.nextgendata.app.source.biz.{Customer => SrcBizCustomer}
 import com.nextgendata.app.target.{Customer => TrgCustomer, CustomerRow => TrgCustomerRow}
@@ -25,13 +25,22 @@ object CustomerJob {
       with Logging with StdOutLogging
       with ApplyDefaultInvaild
 
+    val dflInvLogPnm = new ProvinceNameMap(ProvinceNameMap.init(sqlContext))
+      with Logging with StdOutLogging
+      with ApplyDefaultInvaild
+
     val trgCustomerRows = customers.map(srcCust =>
       TrgCustomerRow(
         srcCust.email,
         (dflInvLogPcm.lookup(srcCust.province) match{
           case pcmv: ProvinceCodeMapVal => pcmv.provinceCd
           case _ =>
-        }).toString
+        }).toString,
+        (dflInvLogPnm.lookup(srcCust.province) match{
+          case pcmv: ProvinceNameMapVal => pcmv.provinceName
+          case _ => "-1"   // not found
+        }).toString,
+        srcCust.postal
       )
     )
 

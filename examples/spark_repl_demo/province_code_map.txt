@@ -1,14 +1,14 @@
-province_cd	src_province_cd
-1	AB
-2	BC
-3	MB
-4	NB
-5	NL
-6	NS
-7	ON
-8	PE
-9	QC
-10	SK
-11	NT
-12	NU
-13	YT
+province_cd	src_province_cd	province_name
+1	AB	Alberta
+2	BC	British Columbia 
+3	MB	Manitoba
+4	NB	New Brunswick 
+5	NL	Newfoundland
+6	NS	Nova Scotia 
+7	ON	Ontario
+8	PE	Prince Edward Island 
+9	QC	Quebec 
+10	SK	Saskatchewan 
+11	NT	Northwest Territories 
+12	NU	Nunavut 
+13	YT	Yukon 
