@@ -30,7 +30,8 @@ object CustomerJob extends Job {
       TrgCustomerRow(
         srcCust.email,
         provCd.map(p => p.provinceCd).getOrElse(""),
-        provCd.map(p => p.provinceName).getOrElse("")
+        provCd.map(p => p.provinceName).getOrElse(""),
+        srcCust.postal
       )
     })
 
