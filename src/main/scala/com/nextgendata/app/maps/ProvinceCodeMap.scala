@@ -2,29 +2,31 @@ package com.nextgendata.app.maps
 
 import com.nextgendata.maps._
 import org.apache.spark.sql.SQLContext
-import scala.collection.Map
 
 /**
   * Created by Craig on 2016-04-27.
   */
-class ProvinceCodeMap (provinceCodeMapRows: Map[ProvinceCodeMapKey, ProvinceCodeMapVal]) extends Serializable with Mapper {
-  val provinceCodeMap = provinceCodeMapRows
+class ProvinceCodeMap(pcm: Map[ProvinceCodeMapKey, ProvinceCodeMapVal])
+  extends Mapper[ProvinceCodeMapKey, ProvinceCodeMapVal] {
 
-  override def lookup(srcVal: Any): Any = {
+  def +[V1 >: ProvinceCodeMapVal](kv: (ProvinceCodeMapKey, V1)) = pcm + kv
+  def -(key: ProvinceCodeMapKey) = new ProvinceCodeMap(pcm - key)
 
-    val ret = provinceCodeMap.get(ProvinceCodeMapKey(srcVal.asInstanceOf[String]))
+  def get(key: ProvinceCodeMapKey) = pcm.get(key)
+  def iterator = pcm.iterator
 
-    if (ret.nonEmpty) ret.head  //returns the first item found
-  }
+  override def getDefault: ProvinceCodeMapVal = ProvinceCodeMapVal("-99", "-99")
+  override def getInvalid: ProvinceCodeMapVal = ProvinceCodeMapVal("-1", "-1")
+  override def getEmptyKey: ProvinceCodeMapKey = ProvinceCodeMapKey("")
 }
 
 case class ProvinceCodeMapKey(srcProvinceCd: String)
-case class ProvinceCodeMapVal(provinceCd: String)
+case class ProvinceCodeMapVal(provinceCd: String, provinceName: String)
 
 object ProvinceCodeMap {
-  private var _data : Map[ProvinceCodeMapKey, ProvinceCodeMapVal] = null
+  private var _data : ProvinceCodeMap = null
 
-  def init(sqlContext: SQLContext): Map[ProvinceCodeMapKey, ProvinceCodeMapVal] = {
+  def apply(sqlContext: SQLContext): ProvinceCodeMap = {
     if (_data == null) {
       val sc = sqlContext.sparkContext
 
@@ -39,11 +41,10 @@ object ProvinceCodeMap {
         file
           .filter(line => line != header)
           .map(_.split("\t"))
-          .map(p => (ProvinceCodeMapKey(p(1)), ProvinceCodeMapVal(p(0)))) //Need to make a tuple (key, value) to access pairRDD functions
+          .map(p => (ProvinceCodeMapKey(p(1)), ProvinceCodeMapVal(p(0), p(2)))) //Need to make a tuple (key, value) to access pairRDD functions
           .cache()
       }
-
-      _data = provinceCodeMap.collectAsMap()
+      _data = new ProvinceCodeMap(provinceCodeMap.collectAsMap().toMap)
     }
 
     _data

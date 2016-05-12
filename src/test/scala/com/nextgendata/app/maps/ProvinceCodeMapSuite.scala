@@ -12,57 +12,57 @@ class ProvinceCodeMapSuite extends SparkFunSuite with SharedSparkContext {
   test ("Test plain ProvinceCodeMap with valid value") {
     val sqlContext = new SQLContext(sc)
     //val pcm = new ProvinceCodeMap(sqlContext)
-    val pcm = new ProvinceCodeMap(ProvinceCodeMap.init(sqlContext))
-    assert(pcm.lookup("ON").asInstanceOf[ProvinceCodeMapVal].provinceCd == "7")
+    val pcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+    assert(pcm.get(ProvinceCodeMapKey("ON")).get.provinceCd == "7")
   }
 
   test ("Test plain ProvinceCodeMap with invalid value") {
     val sqlContext = new SQLContext(sc)
-    val pcm = new ProvinceCodeMap(ProvinceCodeMap.init(sqlContext))
-    assert(pcm.lookup("XX") == ())
+    val pcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+    assert(pcm.get(ProvinceCodeMapKey("XX")).isEmpty)
   }
 
   test ("Test plain ProvinceCodeMap to ensure header is filtered out") {
     val sqlContext = new SQLContext(sc)
-    val pcm = new ProvinceCodeMap(ProvinceCodeMap.init(sqlContext))
-    assert(pcm.lookup("src_province_cd") == ())
+    val pcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+    assert(pcm.get(ProvinceCodeMapKey("src_province_cd")).isEmpty)
   }
 
   test ("Test logger decorated ProvinceCodeMap with invalid value") {
     val sqlContext = new SQLContext(sc)
-    val pcmWithLogger = new ProvinceCodeMap(ProvinceCodeMap.init(sqlContext))
-      with Logging with StdOutLogging
-    assert(pcmWithLogger.lookup("XX") == ())
+    val pcmWithLogger = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+      with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
+    assert(pcmWithLogger.get(ProvinceCodeMapKey("XX")).isEmpty)
   }
 
   test ("Test logger decorated ProvinceCodeMap with valid value") {
     val sqlContext = new SQLContext(sc)
-    val pcmWithLogger = new ProvinceCodeMap(ProvinceCodeMap.init(sqlContext))
-      with Logging with StdOutLogging
-    assert(pcmWithLogger.lookup("ON").asInstanceOf[ProvinceCodeMapVal].provinceCd == "7")
+    val pcmWithLogger = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+      with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
+    assert(pcmWithLogger.get(ProvinceCodeMapKey("ON")).get.provinceCd == "7")
   }
 
   test ("Test logger & default/invalid decorated ProvinceCodeMap with invalid value") {
     val sqlContext = new SQLContext(sc)
-    val pcmWithLoggerAndDefaultInvalid = new ProvinceCodeMap(ProvinceCodeMap.init(sqlContext))
-      with Logging with StdOutLogging
-      with ApplyDefaultInvaild
-    assert(pcmWithLoggerAndDefaultInvalid.lookup("XX") == "-1")
+    val pcmWithLoggerAndDefaultInvalid = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+      with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
+      with ApplyDefaultInvalid[ProvinceCodeMapKey, ProvinceCodeMapVal]
+    assert(pcmWithLoggerAndDefaultInvalid.get(ProvinceCodeMapKey("XX")).get.provinceCd == "-1")
   }
 
   test ("Test logger & default/invalid decorated ProvinceCodeMap with valid value") {
     val sqlContext = new SQLContext(sc)
-    val pcmWithLoggerAndDefaultInvalid = new ProvinceCodeMap(ProvinceCodeMap.init(sqlContext))
-      with Logging with StdOutLogging
-      with ApplyDefaultInvaild
-    assert(pcmWithLoggerAndDefaultInvalid.lookup("ON").asInstanceOf[ProvinceCodeMapVal].provinceCd == "7")
+    val pcmWithLoggerAndDefaultInvalid = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+      with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
+      with ApplyDefaultInvalid[ProvinceCodeMapKey, ProvinceCodeMapVal]
+    assert(pcmWithLoggerAndDefaultInvalid.get(ProvinceCodeMapKey("ON")).get.provinceCd == "7")
   }
 
   test ("Test logger & default/invalid decorated ProvinceCodeMap with no value") {
     val sqlContext = new SQLContext(sc)
-    val pcmWithLoggerAndDefaultInvalid = new ProvinceCodeMap(ProvinceCodeMap.init(sqlContext))
-      with Logging with StdOutLogging
-      with ApplyDefaultInvaild
-    assert(pcmWithLoggerAndDefaultInvalid.lookup("") == "-99")
+    val pcmWithLoggerAndDefaultInvalid = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+      with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
+      with ApplyDefaultInvalid[ProvinceCodeMapKey, ProvinceCodeMapVal]
+    assert(pcmWithLoggerAndDefaultInvalid.get(ProvinceCodeMapKey("")).get.provinceCd == "-99")
   }
 }
