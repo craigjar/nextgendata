@@ -15,4 +15,4 @@ object Customer {
   }
 }
 
-case class CustomerRow(email: String, provinceCode: String, provinceName:String, postal: String )
+case class CustomerRow(email: String, provinceCode: String, provinceName:String, postal: String, CIFId: Int)

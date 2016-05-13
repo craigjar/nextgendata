@@ -18,20 +18,24 @@ object CustomerJob extends Job {
     // this is used to implicitly convert an RDD to a DataFrame or Dataset.
     import sqlContext.implicits._
 
-    val customers = SrcBizCustomer.getCustomers(sqlContext)
+    val customers = SrcBizCustomer.getCustomersWithCif
 
     val dflInvLogPcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
       with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
       with ApplyDefaultInvalid[ProvinceCodeMapKey, ProvinceCodeMapVal]
 
     val trgCustomerRows = customers.map(srcCust => {
-      val provCd = dflInvLogPcm.get(ProvinceCodeMapKey(srcCust.province))
+      //Mapping the tuple to named values instead of using _1, _2, _3 syntax
+      val (bizCustRow, cifXrefRow, cifCustRow) = srcCust
+
+      val provCd = dflInvLogPcm.get(ProvinceCodeMapKey(bizCustRow.province))
 
       TrgCustomerRow(
-        srcCust.email,
+        bizCustRow.email,
         provCd.map(p => p.provinceCd).getOrElse(""),
         provCd.map(p => p.provinceName).getOrElse(""),
-        srcCust.postal
+        bizCustRow.postal,
+        cifCustRow.CIFId
       )
     })
 
