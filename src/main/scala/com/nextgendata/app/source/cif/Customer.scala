@@ -1,6 +1,6 @@
 package com.nextgendata.app.source.cif
 
-import com.nextgendata.Job
+import com.nextgendata.framework.Job
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 

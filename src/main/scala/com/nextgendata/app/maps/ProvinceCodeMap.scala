@@ -1,6 +1,6 @@
 package com.nextgendata.app.maps
 
-import com.nextgendata.maps._
+import com.nextgendata.framework.maps._
 import org.apache.spark.sql.SQLContext
 
 /**

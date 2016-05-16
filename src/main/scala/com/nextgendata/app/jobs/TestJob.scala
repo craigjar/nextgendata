@@ -1,4 +1,4 @@
-package com.nextgendata.jobs
+package com.nextgendata.app.jobs
 
 import com.nextgendata.app.rules.Standard
 import org.apache.spark.SparkContext

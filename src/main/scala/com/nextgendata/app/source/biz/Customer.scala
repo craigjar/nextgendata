@@ -1,11 +1,10 @@
 package com.nextgendata.app.source.biz
 
-import com.nextgendata.Job
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
-
 import com.nextgendata.app.source.cif.{Customer => CifCustomer, CustomerRow => CifCustomerRow}
 import com.nextgendata.app.source.cif.{Xref => CifXref, XrefRow => CifXrefRow}
+import com.nextgendata.framework.Job
 /**
   * Created by Craig on 2016-04-29.
   */

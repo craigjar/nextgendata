@@ -1,11 +1,11 @@
 package com.nextgendata.app.jobs.biz
 
-import com.nextgendata.Job
 import com.nextgendata.app.maps._
 import org.apache.spark.{SparkConf, SparkContext}
 import com.nextgendata.app.source.biz.{Customer => SrcBizCustomer}
 import com.nextgendata.app.target.{Customer => TrgCustomer, CustomerRow => TrgCustomerRow}
-import com.nextgendata.maps.{Logging, StdOutLogging}
+import com.nextgendata.framework.Job
+import com.nextgendata.framework.maps.{Logging, StdOutLogging}
 
 /**
   * Created by Craig on 2016-04-29.

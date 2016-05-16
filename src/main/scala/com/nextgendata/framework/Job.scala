@@ -1,4 +1,4 @@
-package com.nextgendata
+package com.nextgendata.framework
 
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}

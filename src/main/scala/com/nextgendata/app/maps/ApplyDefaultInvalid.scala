@@ -1,6 +1,6 @@
 package com.nextgendata.app.maps
 
-import com.nextgendata.maps.Mapper
+import com.nextgendata.framework.maps.Mapper
 import com.nextgendata.app.rules.Standard
 
 /**

@@ -1,6 +1,6 @@
 package com.nextgendata.app.maps
 
-import com.nextgendata.maps.{Logging, StdOutLogging}
+import com.nextgendata.framework.maps.{Logging, StdOutLogging}
 import com.nextgendata.{SharedSparkContext, SparkFunSuite}
 import org.apache.spark.sql.SQLContext
 
