@@ -33,15 +33,15 @@ object CustomerJob extends Job {
       //Mapping the tuple to named values instead of using _1, _2, _3 syntax
       val (bizCustRow, cifXrefRow, cifCustRow) = srcCust
 
-      val provCd = dflInvLogPcm.get(ProvinceCodeMapKey(bizCustRow.province))
+      val provCd = dflInvLogPcm.get(ProvinceCodeMapKey(bizCustRow.province)).getOrElse(dflInvLogPcm.getDefault)
 
-      val cntryCd = dflInvLogCntrPcm.get(CountryCodeMapKey(provCd.map(p => p.countryCd).toString))
+      val cntryCd = dflInvLogCntrPcm.get(CountryCodeMapKey(provCd.countryCd)).getOrElse(dflInvLogCntrPcm.getDefault)
 
         TrgCustomerRow(
           bizCustRow.email,
-          provCd.map(p => p.provinceCd).getOrElse(""),
-          provCd.map(p => p.provinceName).getOrElse(""),
-          cntryCd.map(c => c.countryName).getOrElse(""),
+          provCd.provinceCd,
+          provCd.provinceName,
+          cntryCd.countryName,
           bizCustRow.postal,
           cifCustRow.CIFId
         )
