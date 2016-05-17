@@ -15,13 +15,13 @@ class ProvinceCodeMap(pcm: Map[ProvinceCodeMapKey, ProvinceCodeMapVal])
   def get(key: ProvinceCodeMapKey) = pcm.get(key)
   def iterator = pcm.iterator
 
-  override def getDefault: ProvinceCodeMapVal = ProvinceCodeMapVal("-99", "-99")
-  override def getInvalid: ProvinceCodeMapVal = ProvinceCodeMapVal("-1", "-1")
+  override def getDefault: ProvinceCodeMapVal = ProvinceCodeMapVal("-99", "-99","-99")
+  override def getInvalid: ProvinceCodeMapVal = ProvinceCodeMapVal("-1", "-1","-1")
   override def getEmptyKey: ProvinceCodeMapKey = ProvinceCodeMapKey("")
 }
 
 case class ProvinceCodeMapKey(srcProvinceCd: String)
-case class ProvinceCodeMapVal(provinceCd: String, provinceName: String)
+case class ProvinceCodeMapVal(provinceCd: String, provinceName: String, countryCd: String)
 
 object ProvinceCodeMap {
   private var _data : ProvinceCodeMap = null
@@ -41,7 +41,7 @@ object ProvinceCodeMap {
         file
           .filter(line => line != header)
           .map(_.split("\t"))
-          .map(p => (ProvinceCodeMapKey(p(1)), ProvinceCodeMapVal(p(0), p(2)))) //Need to make a tuple (key, value) to access pairRDD functions
+          .map(p => (ProvinceCodeMapKey(p(1)), ProvinceCodeMapVal(p(0), p(2),p(3)))) //Need to make a tuple (key, value) to access pairRDD functions
           .cache()
       }
       _data = new ProvinceCodeMap(provinceCodeMap.collectAsMap().toMap)
