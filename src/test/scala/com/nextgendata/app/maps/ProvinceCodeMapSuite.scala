@@ -11,7 +11,6 @@ class ProvinceCodeMapSuite extends SparkFunSuite with SharedSparkContext {
 
   test ("Test plain ProvinceCodeMap with valid value") {
     val sqlContext = new SQLContext(sc)
-    //val pcm = new ProvinceCodeMap(sqlContext)
     val pcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
     assert(pcm.get(ProvinceCodeMapKey("ON")).get.provinceCd == "7")
   }
@@ -64,5 +63,26 @@ class ProvinceCodeMapSuite extends SparkFunSuite with SharedSparkContext {
       with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
       with ApplyDefaultInvalid[ProvinceCodeMapKey, ProvinceCodeMapVal]
     assert(pcmWithLoggerAndDefaultInvalid.get(ProvinceCodeMapKey("")).get.provinceCd == "-99")
+  }
+
+  test ("Test overridden Map method +") {
+    val sqlContext = new SQLContext(sc)
+    val pcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+    val pcm2 = pcm + (ProvinceCodeMapKey("XX") -> ProvinceCodeMapVal("14", "Test", "123"))
+    assert(pcm2.get(ProvinceCodeMapKey("XX")).get.provinceCd == "14")
+  }
+
+  test ("Test overridden Map method -") {
+    val sqlContext = new SQLContext(sc)
+    val pcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+    val pcm2 = pcm - ProvinceCodeMapKey("ON")
+    assert(pcm2.get(ProvinceCodeMapKey("ON")).isEmpty)
+  }
+
+  test ("Test overridden Map method iterator") {
+    val sqlContext = new SQLContext(sc)
+    val pcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+    val iter = pcm.iterator
+    iter.foreach(elem => assert(pcm.get(elem._1).nonEmpty))
   }
 }
