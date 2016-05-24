@@ -32,6 +32,10 @@ object Job {
 
   def sqlContext: SQLContext = {
     if (_sqlContext == null) _sqlContext = new SQLContext(sc)
+
+    //Reducing the number of shuffle partitions from 200 (default) to 2 for performance
+    _sqlContext.setConf( "spark.sql.shuffle.partitions", "2")
+
     _sqlContext
   }
 }

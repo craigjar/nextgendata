@@ -21,7 +21,7 @@ package com.nextgendata
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Outcome}
 
 //import org.apache.spark.internal.Logging
-import org.apache.spark.Accumulators
+//import org.apache.spark.Accumulators
 
 /**
   * Base abstract class for all unit tests in Spark for handling common functionality.
@@ -60,6 +60,5 @@ private[nextgendata] abstract class SparkFunSuite
       //logInfo(s"\n\n===== FINISHED $shortSuiteName: '$testName' =====\n")
     }
   }
-
 }
 

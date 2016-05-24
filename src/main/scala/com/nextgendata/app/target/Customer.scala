@@ -3,22 +3,22 @@ package com.nextgendata.app.target
 import java.io.File
 
 import org.apache.commons.io.FileUtils
-import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.Dataset
 
 /**
   * Created by Craig on 2016-04-29.
   */
 object Customer {
-  def insert(customers: RDD[CustomerRow]): Unit ={
+  def insert(customers: Dataset[CustomerRow]): Unit ={
     FileUtils.deleteDirectory(new File("target/Customer.txt"))
-    customers.saveAsTextFile("target/Customer.txt")
+    customers.rdd.saveAsTextFile("target/Customer.txt")
   }
 }
 
 object BadCustomer {
-  def insert(customers: RDD[BadCustomerRow]): Unit ={
+  def insert(customers: Dataset[BadCustomerRow]): Unit ={
     FileUtils.deleteDirectory(new File("target/BadCustomer.txt"))
-    customers.saveAsTextFile("target/BadCustomer.txt")
+    customers.rdd.saveAsTextFile("target/BadCustomer.txt")
   }
 }
 
