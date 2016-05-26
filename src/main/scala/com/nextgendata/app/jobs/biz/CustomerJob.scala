@@ -23,29 +23,24 @@ object CustomerJob extends Job {
 
     val customers = SrcBizCustomer.getCustomersWithCif
 
-    //val countryMap = CountryCodeMapTbl.getCountryCodeMap
-
-    val dflInvLogPcm = new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+    val dflInvLogPcm = Job.sc.broadcast(new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
       with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
-      with ApplyDefaultInvalid[ProvinceCodeMapKey, ProvinceCodeMapVal]
+      with ApplyDefaultInvalid[ProvinceCodeMapKey, ProvinceCodeMapVal])
 
-    val dflInvLogCntrPcm = new CountryCodeMap(CountryCodeMap(sqlContext))
+    val dflInvLogCntrPcm = Job.sc.broadcast(new CountryCodeMap(CountryCodeMap(sqlContext))
       with Logging[CountryCodeMapKey, CountryCodeMapVal] with StdOutLogging[CountryCodeMapKey, CountryCodeMapVal]
-      with ApplyDefaultInvalid[CountryCodeMapKey, CountryCodeMapVal]
+      with ApplyDefaultInvalid[CountryCodeMapKey, CountryCodeMapVal])
 
     val trgCustomerRows = customers.map(srcCust => {
-        //Mapping the tuple to named values instead of using _1, _2, _3 syntax
+      //Mapping the tuple to named values instead of using _1, _2, _3 syntax
       val (bizCustRow, cifXrefRow, cifCustRow) = srcCust
 
-      val provCd = dflInvLogPcm.get(ProvinceCodeMapKey(bizCustRow.province)).getOrElse(dflInvLogPcm.getDefault)
+      val provCd = dflInvLogPcm.value.get(ProvinceCodeMapKey(bizCustRow.province)).getOrElse(dflInvLogPcm.value.getDefault)
 
-      val cntryCd = dflInvLogCntrPcm.get(CountryCodeMapKey(provCd.countryCd)).getOrElse(dflInvLogCntrPcm.getDefault)
-
-      val countryRdd = Job.sc.parallelize(Seq(cntryCd))
-      val broadcastedCntry = Job.sc.broadcast(cntryCd)
+      val cntryCd = dflInvLogCntrPcm.value.get(CountryCodeMapKey(provCd.countryCd)).getOrElse(dflInvLogCntrPcm.value.getDefault)
 
       if (provCd.provinceName == "-99" ||
-        broadcastedCntry.value.countryName == "-99") {
+        cntryCd.countryName == "-99") {
         rowSkipCnt += 1
         //throw new InvalidRowException("Not Valid")
       }
@@ -56,11 +51,12 @@ object CustomerJob extends Job {
         bizCustRow.email,
         provCd.provinceCd,
         provCd.provinceName,
-        broadcastedCntry.value.countryName,
+        cntryCd.countryName,
         bizCustRow.postal,
         cifCustRow.CIFId
       )
     })
+
     TrgCustomer.insert(trgCustomerRows)
     println("""Skipped Row Count """ + rowSkipCnt)
     println("""Inserted Row Count """ + rowInsertCnt)
@@ -70,4 +66,3 @@ object CustomerJob extends Job {
 class InvalidRowException(smth: String) extends Exception(smth) {
 
 }
-
