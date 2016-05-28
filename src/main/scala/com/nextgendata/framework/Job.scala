@@ -20,7 +20,11 @@ trait Job {
 }
 
 object Job {
-  private val _conf = new SparkConf().setAppName("MyLocalApp").setMaster("local[*]").set("spark.eventLog.enabled", "true")
+  private val _conf = new SparkConf()
+    .setAppName("MyLocalApp")
+    .setMaster("local[*]")
+    //.set("spark.eventLog.enabled", "true") //Temporarily removing event logging to fix Jenkins build
+
   private var _sc : SparkContext = null
 
   private var _sqlContext : SQLContext = null
