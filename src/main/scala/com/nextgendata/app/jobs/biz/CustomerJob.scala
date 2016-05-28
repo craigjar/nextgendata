@@ -1,9 +1,8 @@
 package com.nextgendata.app.jobs.biz
 
 import com.nextgendata.app.maps._
-import org.apache.spark.{SparkConf, SparkContext}
 import com.nextgendata.app.source.biz.{Customer => SrcBizCustomer}
-import com.nextgendata.app.target.{Customer => TrgCustomer, BadCustomer => TrgBadCustomer, CustomerRow => TrgCustomerRow, BadCustomerRow => TrgBadCustomerRow}
+import com.nextgendata.app.target.{BadCustomer => TrgBadCustomer, BadCustomerRow => TrgBadCustomerRow, Customer => TrgCustomer, CustomerRow => TrgCustomerRow}
 import com.nextgendata.framework.Job
 import com.nextgendata.framework.maps.{Logging, StdOutLogging}
 
@@ -23,11 +22,11 @@ object CustomerJob extends Job {
 
     val customers = SrcBizCustomer.getCustomersWithCif
 
-    val dflInvLogPcm = Job.sc.broadcast(new ProvinceCodeMap(ProvinceCodeMap(sqlContext))
+    val dflInvLogPcm = Job.sc.broadcast(new ProvinceCodeMap(ProvinceCodeMap())
       with Logging[ProvinceCodeMapKey, ProvinceCodeMapVal] with StdOutLogging[ProvinceCodeMapKey, ProvinceCodeMapVal]
       with ApplyDefaultInvalid[ProvinceCodeMapKey, ProvinceCodeMapVal])
 
-    val dflInvLogCntrPcm = Job.sc.broadcast(new CountryCodeMap(CountryCodeMap(sqlContext))
+    val dflInvLogCntrPcm = Job.sc.broadcast(new CountryCodeMap(CountryCodeMap())
       with Logging[CountryCodeMapKey, CountryCodeMapVal] with StdOutLogging[CountryCodeMapKey, CountryCodeMapVal]
       with ApplyDefaultInvalid[CountryCodeMapKey, CountryCodeMapVal])
 

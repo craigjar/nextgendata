@@ -1,7 +1,7 @@
 package com.nextgendata.app.maps
 
-import com.nextgendata.framework.maps.{Mapper, _}
-import org.apache.spark.sql.SQLContext
+import com.nextgendata.framework.Job
+import com.nextgendata.framework.maps.Mapper
 
 /**
   * Created by Justin on 5/16/2016.
@@ -24,11 +24,11 @@ case class CountryCodeMapKey(srcCountryCd: String)
 case class CountryCodeMapVal(countryName: String)
 
 object CountryCodeMap {
-  private var _data : CountryCodeMap = null
+  private var _data : Option[CountryCodeMap] = None
 
-  def apply(sqlContext: SQLContext): CountryCodeMap = {
-    if (_data == null) {
-      val sc = sqlContext.sparkContext
+  def apply(): CountryCodeMap = {
+    if (_data.isEmpty) {
+      val sc = Job.sqlContext.sparkContext
 
       val file = sc.textFile("examples/spark_repl_demo/country_code_map.txt")
 
@@ -44,9 +44,9 @@ object CountryCodeMap {
           .map(p => (CountryCodeMapKey(p(0)), CountryCodeMapVal(p(1)))) //Need to make a tuple (key, value) to access pairRDD functions
           .cache()
       }
-      _data = new CountryCodeMap(countryCodeMap.collectAsMap().toMap)
+      _data = Some(new CountryCodeMap(countryCodeMap.collectAsMap().toMap))
     }
 
-    _data
+    _data.get
   }
 }

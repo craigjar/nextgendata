@@ -17,6 +17,7 @@
 
 package com.nextgendata
 
+import com.nextgendata.framework.Job
 import org.apache.spark.{SparkConf, SparkContext}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.Suite
@@ -32,13 +33,14 @@ trait SharedSparkContext extends BeforeAndAfterAll { self: Suite =>
 
   override def beforeAll() {
     super.beforeAll()
-    _sc = new SparkContext("local[4]", "test", conf)
+    //_sc = new SparkContext("local[4]", "test", conf)
+    _sc = Job.sc
   }
 
   override def afterAll() {
     try {
-      LocalSparkContext.stop(_sc)
-      _sc = null
+      //LocalSparkContext.stop(_sc)
+      //_sc = null
     } finally {
       super.afterAll()
     }

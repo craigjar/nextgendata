@@ -1,7 +1,7 @@
 package com.nextgendata.app.maps
 
+import com.nextgendata.framework.Job
 import com.nextgendata.framework.maps._
-import org.apache.spark.sql.SQLContext
 
 /**
   * Created by Craig on 2016-04-27.
@@ -24,11 +24,11 @@ case class ProvinceCodeMapKey(srcProvinceCd: String)
 case class ProvinceCodeMapVal(provinceCd: String, provinceName: String, countryCd: String)
 
 object ProvinceCodeMap {
-  private var _data : ProvinceCodeMap = null
+  private var _data : Option[ProvinceCodeMap] = None
 
-  def apply(sqlContext: SQLContext): ProvinceCodeMap = {
-    if (_data == null) {
-      val sc = sqlContext.sparkContext
+  def apply(): ProvinceCodeMap = {
+    if (_data.isEmpty) {
+      val sc = Job.sqlContext.sparkContext
 
       val file = sc.textFile("examples/spark_repl_demo/province_code_map.txt")
 
@@ -44,9 +44,9 @@ object ProvinceCodeMap {
           .map(p => (ProvinceCodeMapKey(p(1)), ProvinceCodeMapVal(p(0), p(2),p(3)))) //Need to make a tuple (key, value) to access pairRDD functions
           .cache()
       }
-      _data = new ProvinceCodeMap(provinceCodeMap.collectAsMap().toMap)
+      _data = Some(new ProvinceCodeMap(provinceCodeMap.collectAsMap().toMap))
     }
 
-    _data
+    _data.get
   }
 }
