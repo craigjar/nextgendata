@@ -15,7 +15,7 @@ package com.nextgendata.framework.maps
   *
   * Example:
   * {{{
-  * val myMapper = Job.sc.broadcast(new MyMap(MyMap(sqlContext))
+  * val myMapper = Job.sc.broadcast(new MyMap(MyMap())
   *    with Logging[MyMapKey, MyMapVal] with StdOutLogging[MyMapKey, MyMapVal]
   * }}}
   */
