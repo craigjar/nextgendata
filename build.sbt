@@ -14,17 +14,12 @@ scalacOptions ++=Seq("-explaintypes", "-unchecked", "-deprecation",
 
 resolvers ++= Seq(
   "Akka Repository" at "http://repo.akka.io/releases/",
-  "Spray Repository" at "http://repo.spray.cc/"/*,
+  "Spray Repository" at "http://repo.spray.cc/",
+  "scoverage-bintray" at "https://dl.bintray.com/sksamuel/sbt-plugins/"/*,
   "ASF" at "http://repository.apache.org/snapshots/"*/
 )
 
 libraryDependencies ++= Seq( "org.apache.spark" %% "spark-core"      % sparkVersion,
                              "org.apache.spark" %% "spark-sql"       % sparkVersion,
-                             "org.apache.spark" %% "spark-streaming" % sparkVersion)
-
-resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksamuel/sbt-plugins/"))(Resolver.ivyStylePatterns)
-
-libraryDependencies ++= Seq("org.scalatest" % "scalatest_2.11" % "2.2.6" % "test")
-                      //      "commons-io"    % "commons-io" % "2.5")
-
-
+                             "org.apache.spark" %% "spark-streaming" % sparkVersion,
+                             "org.scalatest"    %% "scalatest"       % "2.2.6" % "test")
