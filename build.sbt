@@ -22,4 +22,4 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq( "org.apache.spark" %% "spark-core"      % sparkVersion,
                              "org.apache.spark" %% "spark-sql"       % sparkVersion,
                              "org.apache.spark" %% "spark-streaming" % sparkVersion,
-                             "org.scalatest"    %% "scalatest"       % "2.2.6" % "test")
+                             "org.scalatest"    %% "scalatest"       % "2.2.6" % Test)
