@@ -10,36 +10,34 @@ trait Job {
   //TODO implement a job trait, consider a Job context that can be shared?
   //TODO implement table counters with accumulators
 
-  def init: Unit = {
+  def init(): Unit  = {
 
   }
 
-  def end: Unit = {
+  def end(): Unit = {
 
   }
 }
 
 object Job {
-  private val _conf = new SparkConf()
+  // use lazy to achieve thread-safety (atomic initialization) and provide effective global immutable data.
+  // As side benefit, avoids using null for initialization.
+  private lazy val initConf = new SparkConf()
     .setAppName("MyLocalApp")
     .setMaster("local[*]")
     //.set("spark.eventLog.enabled", "true") //Temporarily removing event logging to fix Jenkins build
 
-  private var _sc : SparkContext = null
+  private lazy val _sc = new SparkContext(initConf)
 
-  private var _sqlContext : SQLContext = null
-
-  def sc: SparkContext = {
-    if (_sc == null) _sc = new SparkContext(_conf)
-    _sc
-  }
-
-  def sqlContext: SQLContext = {
-    if (_sqlContext == null) _sqlContext = new SQLContext(sc)
-
+  private lazy val _sqlContext = {
+    val x = new SQLContext(_sc)
     //Reducing the number of shuffle partitions from 200 (default) to 2 for performance
-    _sqlContext.setConf( "spark.sql.shuffle.partitions", "2")
-
-    _sqlContext
+    x.setConf( "spark.sql.shuffle.partitions", "2")
+    x
   }
+
+  def sc: SparkContext = _sc
+
+  def sqlContext: SQLContext = _sqlContext
+
 }

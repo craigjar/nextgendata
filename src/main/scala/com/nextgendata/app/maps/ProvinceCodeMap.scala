@@ -24,29 +24,26 @@ case class ProvinceCodeMapKey(srcProvinceCd: String)
 case class ProvinceCodeMapVal(provinceCd: String, provinceName: String, countryCd: String)
 
 object ProvinceCodeMap {
-  private var _data : Option[ProvinceCodeMap] = None
+  private lazy val _data = init
 
-  def apply(): ProvinceCodeMap = {
-    if (_data.isEmpty) {
-      val sc = Job.sqlContext.sparkContext
+  def init: ProvinceCodeMap = {
+    val sc = Job.sqlContext.sparkContext
+    val file = sc.textFile("examples/spark_repl_demo/province_code_map.txt")
 
-      val file = sc.textFile("examples/spark_repl_demo/province_code_map.txt")
+    //Have to wrap this Spark code in a block so that the header val is only scoped to this call
+    //not the entire class.  If header val was class level, then the closure would try to serialize
+    //this entire class and fail since it contains non-serializable objects (SQL/SparkContext)
+    val provinceCodeMap = {
+      val header = file.first()
 
-      //Have to wrap this Spark code in a block so that the header val is only scoped to this call
-      //not the entire class.  If header val was class level, then the closure would try to serialize
-      //this entire class and fail since it contains non-serializable objects (SQL/SparkContext)
-      val provinceCodeMap = {
-        val header = file.first()
-
-        file
-          .filter(line => line != header)
-          .map(_.split("\t"))
-          .map(p => (ProvinceCodeMapKey(p(1)), ProvinceCodeMapVal(p(0), p(2),p(3)))) //Need to make a tuple (key, value) to access pairRDD functions
-          .cache()
-      }
-      _data = Some(new ProvinceCodeMap(provinceCodeMap.collectAsMap().toMap))
+      file
+        .filter(line => line != header)
+        .map(_.split("\t"))
+        .map(p => (ProvinceCodeMapKey(p(1)), ProvinceCodeMapVal(p(0), p(2),p(3)))) //Need to make a tuple (key, value) to access pairRDD functions
+        .cache()
     }
-
-    _data.get
+    new ProvinceCodeMap(provinceCodeMap.collectAsMap().toMap)
   }
+  def apply(): ProvinceCodeMap = _data
+
 }
