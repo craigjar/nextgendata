@@ -5,10 +5,10 @@ package com.nextgendata.app.rules
   */
 
 object Standard {
-  def defaultInvalid(origVal: Any, mappedVal: Any): Any = {
-    if (origVal == () || origVal == null) "-99"
-    else if (origVal.isInstanceOf[String] && origVal.asInstanceOf[String].trim().isEmpty()) "-99"
-    else if (mappedVal == () || mappedVal == null) "-1"
-    else mappedVal
+  def defaultInvalid(origVal: Any, mappedVal: Any): Any = (origVal, mappedVal) match {
+    case (null, _)  => "-99"
+    case (orig: String, _) if orig.trim.isEmpty => "-99"
+    case (_, null)  => "-1"
+    case (_, mapped) => mapped
   }
 }

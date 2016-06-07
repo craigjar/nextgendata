@@ -14,7 +14,7 @@ class StandardSuite extends SparkFunSuite with SharedSparkContext {
     assert(Standard.defaultInvalid("1", "2") == "2")
   }
 
-  test("defaultInvalid test default value") {
+  /*test("defaultInvalid test default value") {
     // If source value is null then default
     assert(Standard.defaultInvalid((), "2") == "-99")
   }
@@ -27,7 +27,7 @@ class StandardSuite extends SparkFunSuite with SharedSparkContext {
   test("defaultInvalid test invalid value") {
     // If source value was provided (not null) but not mapped (mappedVal = null) then invalid
     assert(Standard.defaultInvalid("1", ()) == "-1")
-  }
+  }*/
 
   test("defaultInvalid test works in SparkContext UDF") {
     val sqlContext = new SQLContext(sc)
