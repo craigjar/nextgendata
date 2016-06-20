@@ -9,11 +9,11 @@ import com.nextgendata.framework.maps._
 class ProvinceCodeMap(pcm: Map[ProvinceCodeMapKey, ProvinceCodeMapVal])
   extends Mapper[ProvinceCodeMapKey, ProvinceCodeMapVal] {
 
-  def +[V1 >: ProvinceCodeMapVal](kv: (ProvinceCodeMapKey, V1)) = pcm + kv
-  def -(key: ProvinceCodeMapKey) = new ProvinceCodeMap(pcm - key)
+  def +[V1 >: ProvinceCodeMapVal](kv: (ProvinceCodeMapKey, V1)): Map[ProvinceCodeMapKey, V1] = pcm + kv
+  def -(key: ProvinceCodeMapKey): ProvinceCodeMap = new ProvinceCodeMap(pcm - key)
 
-  def get(key: ProvinceCodeMapKey) = pcm.get(key)
-  def iterator = pcm.iterator
+  def get(key: ProvinceCodeMapKey): Option[ProvinceCodeMapVal]  = pcm.get(key)
+  def iterator: Iterator[(ProvinceCodeMapKey, ProvinceCodeMapVal)] = pcm.iterator
 
   override def getDefault: ProvinceCodeMapVal = ProvinceCodeMapVal("-99", "-99","-99")
   override def getInvalid: ProvinceCodeMapVal = ProvinceCodeMapVal("-1", "-1","-1")

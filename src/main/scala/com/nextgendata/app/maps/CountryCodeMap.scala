@@ -9,11 +9,11 @@ import com.nextgendata.framework.maps.Mapper
 class CountryCodeMap(pcm: Map[CountryCodeMapKey, CountryCodeMapVal])
   extends Mapper[CountryCodeMapKey, CountryCodeMapVal] {
 
-  def +[V1 >: CountryCodeMapVal](kv: (CountryCodeMapKey, V1)) = pcm + kv
-  def -(key: CountryCodeMapKey) = new CountryCodeMap(pcm - key)
+  def +[V1 >: CountryCodeMapVal](kv: (CountryCodeMapKey, V1)): Map[CountryCodeMapKey, V1] = pcm + kv
+  def -(key: CountryCodeMapKey): CountryCodeMap = new CountryCodeMap(pcm - key)  // should it be Mapper type instead?
 
-  def get(key: CountryCodeMapKey) = pcm.get(key)
-  def iterator = pcm.iterator
+  def get(key: CountryCodeMapKey): Option[CountryCodeMapVal] = pcm.get(key)
+  def iterator: Iterator[(CountryCodeMapKey, CountryCodeMapVal)] = pcm.iterator
 
   override def getDefault: CountryCodeMapVal = CountryCodeMapVal("-99")
   override def getInvalid: CountryCodeMapVal = CountryCodeMapVal("-1")
