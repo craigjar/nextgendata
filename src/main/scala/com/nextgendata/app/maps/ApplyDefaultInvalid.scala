@@ -10,13 +10,12 @@ trait ApplyDefaultInvalid[K, V] extends Mapper[K, V]{
   abstract override def get(srcVal: K): Option[V] = {
     val mappedVal = super.get(srcVal)
 
-    if (srcVal == () || srcVal == null || srcVal == this.getEmptyKey)
-      Option(this.getDefault)
-    else if (srcVal.isInstanceOf[String] && srcVal.asInstanceOf[String].trim().isEmpty())
-      Option(this.getDefault)
-    else if (mappedVal.isEmpty)
-      Option(this.getInvalid)
-    else
-      mappedVal
+    (srcVal, mappedVal) match {
+      case (null, _)  => Option(this.getDefault) // compiler warns us here against using null.
+      case (s: String, _) if s.trim.isEmpty => Option(this.getDefault)
+      case (k, _)  if k == this.getEmptyKey => Option(this.getDefault)
+      case (_, m) if m.isEmpty => Option(this.getInvalid)
+      case _  => mappedVal
+    }
   }
 }
