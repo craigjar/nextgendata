@@ -2,7 +2,7 @@ package com.nextgendata.app.jobs.biz
 
 import com.nextgendata.app.maps._
 import com.nextgendata.app.source.biz.{Customer => SrcBizCustomer}
-import com.nextgendata.app.target.{BadCustomer => TrgBadCustomer, BadCustomerRow => TrgBadCustomerRow, Customer => TrgCustomer, CustomerRow => TrgCustomerRow}
+import com.nextgendata.app.target.{Customer => TrgCustomer, CustomerRow => TrgCustomerRow}
 import com.nextgendata.framework.Job
 import com.nextgendata.framework.maps.{Logging, StdOutLogging}
 
